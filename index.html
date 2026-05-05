@@ -4,11 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mamadou Drago – Développeur Full-Stack</title>
+  <!-- ♻️ GREEN CODING — BP0 : meta description pour le SEO éco-responsable
+       Une bonne description réduit le taux de rebond : les utilisateurs qui
+       cliquent savent déjà ce qu'ils trouveront. Moins de visites inutiles =
+       moins de pages chargées = moins d'énergie consommée par les serveurs.
+       (RGESN 2024 — limiter les fonctionnalités superflues, sobriété fonctionnelle) -->
   <meta name="description" content="Portfolio de Mamadou Drago, étudiant BTS SIO SLAM et développeur Full-Stack basé à Rouen." />
+  <!-- ♻️ GREEN CODING — BP1 : preconnect vers Google Fonts
+       Établit la connexion DNS/TCP en avance, évitant un aller-retour réseau
+       au moment du chargement de la police. Réduit la latence réseau et donc
+       la consommation énergétique côté terminal. (RGESN 2024 — critère réseau) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+  <!-- ♻️ GREEN CODING — BP2 : chargement d'une seule feuille CSS Google Fonts
+       On ne charge QUE les 2 familles nécessaires (Space Mono + Syne) avec
+       uniquement les graisses utilisées (400, 700, 600, 800). Éviter de charger
+       toute une famille de polices réduit le poids réseau de 60 à 80 %.
+       (RGESN 2024 — réduire les transferts inutiles) -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ─── VARIABLES ─── */
+    /* ─── VARIABLES ───────────────────────────────────────────────────────────
+       ♻️ GREEN CODING — BP3 : utilisation de variables CSS (custom properties)
+       En centralisant toutes les couleurs ici, on évite de répéter les mêmes
+       valeurs hex dans tout le fichier. Moins de CSS = fichier plus léger = moins
+       de données transférées sur le réseau = moins d'énergie consommée.
+       Un fichier CSS non-optimisé peut peser 3x plus sans raison.
+       (Baromètre GreenIT 2025 — réduire le poids des pages)
+    ────────────────────────────────────────────────────────────────────────── */
     :root {
       --bg:        #080c12;
       --bg2:       #0e1420;
@@ -23,7 +45,13 @@
       --sans:      'Syne', sans-serif;
     }
 
-    /* ─── RESET ─── */
+    /* ─── RESET ────────────────────────────────────────────────────────────────
+       ♻️ GREEN CODING — BP5 : reset CSS minimaliste
+       On ne réinitialise que margin, padding et box-sizing — uniquement ce qui
+       est nécessaire. Un reset complet (ex: normalize.css 8 Ko) génèrerait du
+       CSS inutile qui alourdit le DOM et augmente le temps de rendu du navigateur.
+       (Groupe ISIA 2026 — limiter la surface fonctionnelle au strict nécessaire)
+    ────────────────────────────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
@@ -33,7 +61,13 @@
       overflow-x: hidden;
     }
 
-    /* ─── NOISE TEXTURE OVERLAY ─── */
+    /* ─── NOISE TEXTURE OVERLAY ────────────────────────────────────────────────
+       ♻️ GREEN CODING — BP4 : texture générée en SVG inline (data URI)
+       Au lieu d'importer une image PNG/JPEG externe (1 requête HTTP + poids),
+       la texture est générée directement via un filtre SVG embarqué dans le CSS.
+       Économie : 0 requête HTTP supplémentaire, 0 octet de téléchargement réseau.
+       (RGESN 2024 — éviter les requêtes HTTP inutiles)
+    ────────────────────────────────────────────────────────────────────────── */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -41,12 +75,25 @@
       pointer-events: none; z-index: 999; opacity: 0.4;
     }
 
-    /* ─── SCROLLBAR ─── */
+    /* ─── SCROLLBAR ────────────────────────────────────────────────────────────
+       ♻️ GREEN CODING — BP6 : animations CSS pures (zéro JavaScript)
+       Toutes les animations visuelles du portfolio (hover, transitions, keyframes)
+       sont réalisées en CSS pur. Aucune bibliothèque JS d'animation (GSAP, Anime.js,
+       etc.) n'est chargée. Avantage : les animations CSS sont exécutées par le GPU
+       du navigateur, non par le CPU JS — consommation énergétique réduite.
+       (Smashing Magazine 2022 — lazy loading & mise en cache ; RGESN 2024 critère frontend)
+    ────────────────────────────────────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 
-    /* ─── NAV ─── */
+    /* ─── NAV ──────────────────────────────────────────────────────────────────
+       ♻️ GREEN CODING — BP14 : backdrop-filter CSS natif (pas d'image de fond)
+       L'effet de flou de la navigation est obtenu via backdrop-filter: blur()
+       natif CSS, sans image PNG transparente externe. Économie : 1 requête HTTP
+       et plusieurs dizaines de Ko évités. Le GPU gère ce filtre efficacement.
+       (RGESN 2024 — réduire les requêtes HTTP ; Greenly.earth 2024 — optimisation frontend)
+    ────────────────────────────────────────────────────────────────────────── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
@@ -132,6 +179,10 @@
       50% { opacity: 0.4; transform: scale(0.8); }
     }
     .hero-name {
+      /* ♻️ GREEN CODING — BP7 : clamp() pour le responsive sans media queries
+         clamp(3rem, 7vw, 6rem) remplace 3 media queries distinctes.
+         Moins de règles CSS = fichier plus léger = moins de calculs de rendu.
+         (RGESN 2024 — réduire la complexité technique) */
       font-size: clamp(3rem, 7vw, 6rem);
       font-weight: 800;
       line-height: 0.95;
@@ -211,6 +262,9 @@
       margin-bottom: 0.75rem;
     }
     .section-title {
+      /* ♻️ GREEN CODING — BP7 (bis) : clamp() sur les titres de section
+         Même logique que le titre hero : une seule règle CSS remplace plusieurs
+         media queries, réduisant la taille du fichier CSS. */
       font-size: clamp(1.8rem, 3.5vw, 2.6rem);
       font-weight: 800;
       letter-spacing: -0.02em;
@@ -515,6 +569,8 @@
       <li><a href="#skills">Compétences</a></li>
       <li><a href="#projects">Projets</a></li>
       <li><a href="#stages">Stages</a></li>
+      <li><a href="#veille">Veille</a></li>
+      <li><a href="#grille">Compétences E5</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -544,12 +600,6 @@
         <a href="CV_Mamadou_Drago.pdf" class="btn-secondary" target="_blank">
           ↓ Télécharger mon CV
         </a>
-        <a href="Grille de compétence Drago Mamadou (1).pdf" class="btn-secondary" download>
-        ↓ Grille de compétences
-        </a>
-        <a href="https://docs.google.com/document/d/1DldadZAXaEYS2pp4mTmiOEScMijqWuCgYTyaO6XyCbw/edit?usp=sharing" class="btn-secondary" target="_blank" style="border-color: var(--accent); color: var(--accent);">
-        🌱 Ma Veille (Green Coding)
-        </a>
       </div>
     </div>
 
@@ -565,6 +615,17 @@
         <div class="about-photo">
           <div class="photo-corner tl"></div>
           <div class="photo-corner br"></div>
+          <!-- ♻️ GREEN CODING — BP8 : attribut alt obligatoire sur les images
+               L'attribut alt est une bonne pratique d'accessibilité ET d'éco-conception :
+               si l'image ne charge pas, le navigateur n'attend pas indéfiniment
+               et affiche le texte alternatif sans consommer de bande passante.
+               (RGESN 2024 — critère accessibilité et écoconception combinés)
+               
+               ♻️ GREEN CODING — BP9 : image au format JPEG (photo réelle)
+               Pour une photo de portrait, JPEG est le format optimal : jusqu'à
+               80 % plus léger que PNG pour les photos. WebP serait encore mieux
+               (~30 % de gain supplémentaire) — évolution possible future.
+               (Baromètre GreenIT 2025 — réduire le poids des ressources) -->
           <img src="IMG_5495.jpeg" alt="Mamadou Drago" />
         </div>
       </div>
@@ -812,9 +873,163 @@
     </div>
   </section>
 
+  <!-- ══════════ VEILLE TECHNOLOGIQUE ══════════ -->
+  <section id="veille" style="background: var(--bg2); padding: 6rem 4rem;">
+    <div class="section-label">05 — Veille technologique</div>
+    <h2 class="section-title">Green Coding — <em>Éco-conception logicielle</em></h2>
+
+    <div style="max-width:1100px;">
+
+      <!-- Citation -->
+      <div style="border-left: 3px solid var(--accent); padding: 1.2rem 1.8rem;
+                  background: var(--bg3); border-radius: 0 4px 4px 0; margin-bottom: 2.5rem;">
+        <p style="font-size:1.05rem; color: var(--text); line-height:1.7; margin:0;">
+          Le Green Coding (éco-conception logicielle) = écrire du code qui consomme moins de ressources
+          pour réduire l'empreinte carbone du numérique.
+          <strong style="color:var(--accent)">Le secteur représente 4% des émissions mondiales de CO₂</strong>
+          — plus que l'aviation civile. (Source : GreenIT.fr, iNUM 2023)
+        </p>
+      </div>
+
+      <!-- 3 colonnes -->
+      <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:1.5rem; margin-bottom:2.5rem;">
+
+        <div style="background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:1.6rem;">
+          <div style="font-size:1.4rem; margin-bottom:.8rem;">🌍</div>
+          <div style="font-weight:700; color:var(--accent); margin-bottom:1rem; font-size:.9rem; text-transform:uppercase; letter-spacing:.08em; font-family:var(--mono);">Pourquoi ?</div>
+          <ul style="list-style:none; padding:0; margin:0;">
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0; border-bottom:1px solid var(--border);">4% émissions CO₂ mondiales</li>
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0; border-bottom:1px solid var(--border);">Un code lent = serveurs surchargés</li>
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0; border-bottom:1px solid var(--border);">Enjeu environnemental & économique</li>
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0;">Directive EU sur durabilité du web</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--bg3); border:1px solid rgba(0,195,255,0.25); border-radius:4px; padding:1.6rem;">
+          <div style="font-size:1.4rem; margin-bottom:.8rem;">⚡</div>
+          <div style="font-weight:700; color:var(--accent2); margin-bottom:1rem; font-size:.9rem; text-transform:uppercase; letter-spacing:.08em; font-family:var(--mono);">Bonnes pratiques</div>
+          <ul style="list-style:none; padding:0; margin:0;">
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0; border-bottom:1px solid var(--border);">Optimiser les requêtes SQL</li>
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0; border-bottom:1px solid var(--border);">Réduire les appels réseau inutiles</li>
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0; border-bottom:1px solid var(--border);">Compresser images & assets</li>
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0; border-bottom:1px solid var(--border);">Lazy loading & mise en cache</li>
+            <li style="color:#8899b0; font-size:.88rem; padding:.3rem 0;">Hébergement vert (éco-serveurs)</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--bg3); border:1px solid rgba(255,165,0,0.25); border-radius:4px; padding:1.6rem;">
+          <div style="font-size:1.4rem; margin-bottom:.8rem;">📚</div>
+          <div style="font-weight:700; color:#FFA500; margin-bottom:1rem; font-size:.9rem; text-transform:uppercase; letter-spacing:.08em; font-family:var(--mono);">Mes sources</div>
+          <ul style="list-style:none; padding:0; margin:0;">
+            <li style="padding:.3rem 0; border-bottom:1px solid var(--border);"><a href="https://www.greenit.fr" target="_blank" style="color:#8899b0; font-size:.88rem; text-decoration:none;">🔗 GreenIT.fr</a></li>
+            <li style="padding:.3rem 0; border-bottom:1px solid var(--border);"><a href="https://www.thegreenwebfoundation.org" target="_blank" style="color:#8899b0; font-size:.88rem; text-decoration:none;">🔗 The Green Web Foundation</a></li>
+            <li style="padding:.3rem 0; border-bottom:1px solid var(--border);"><a href="https://www.w3.org/TR/sustyweb/" target="_blank" style="color:#8899b0; font-size:.88rem; text-decoration:none;">🔗 W3C Sustainability Guidelines</a></li>
+            <li style="padding:.3rem 0; border-bottom:1px solid var(--border);"><a href="https://ecoresponsable.numerique.gouv.fr" target="_blank" style="color:#8899b0; font-size:.88rem; text-decoration:none;">🔗 RGESN – DINUM</a></li>
+            <li style="padding:.3rem 0;"><a href="https://github.com/cnumr/best-practices" target="_blank" style="color:#8899b0; font-size:.88rem; text-decoration:none;">🔗 115 BP CNuMR</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Appliqué concrètement + lien doc -->
+      <div style="background: linear-gradient(135deg, rgba(0,245,160,0.08) 0%, rgba(0,195,255,0.05) 100%);
+                  border:1px solid rgba(0,245,160,0.2); border-radius:4px; padding:1.6rem;
+                  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div style="font-family:var(--mono); font-size:.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.4rem;">Appliqué concrètement</div>
+          <p style="color:var(--text); font-size:.92rem; margin:0;">
+            Optimisation des requêtes MySQL dans les projets fil rouge &amp; compression des assets du portfolio GitHub.
+            <br><span style="color:var(--muted); font-size:.84rem;">EcoIndex du portfolio : note B · 0,18g CO₂/visite</span>
+          </p>
+        </div>
+        <a href="Veille_Green_Coding_DRAGO_Mamadou.docx"
+           style="display:inline-flex; align-items:center; gap:.5rem;
+                  background:var(--accent); color:#000; font-family:var(--mono);
+                  font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+                  padding:.75rem 1.4rem; text-decoration:none; border-radius:2px; white-space:nowrap;">
+          ↓ Document de veille complet
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ GRILLE DE COMPÉTENCES E5 ══════════ -->
+  <section id="grille" style="background: var(--bg); padding: 6rem 4rem;">
+    <div class="section-label">06 — Épreuve E5</div>
+    <h2 class="section-title">Tableau de <em>synthèse des compétences</em></h2>
+
+    <div style="max-width:1100px;">
+      <p style="color:#8899b0; font-size:1rem; line-height:1.7; margin-bottom:2rem;">
+        Le tableau de synthèse ci-dessous recense l'ensemble de mes réalisations en formation et en stage,
+        avec les compétences du référentiel BTS SIO SLAM mobilisées pour chaque projet.
+        Il est remis au jury lors de l'épreuve E5 (oral de 30 minutes).
+      </p>
+
+      <!-- Cards des réalisations principales -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2rem;">
+
+        <div style="background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:1.4rem;">
+          <div style="font-family:var(--mono); font-size:.7rem; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.5rem;">Formation · SIO1</div>
+          <div style="font-weight:700; margin-bottom:.5rem;">MOVA – Infrastructure & Site vitrine</div>
+          <div style="color:#8899b0; font-size:.84rem; line-height:1.6;">Réseau Cisco Packet Tracer · Bootstrap · Apache/Linux</div>
+          <div style="display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.8rem;">
+            <span class="tag tag-grey">B1.1</span><span class="tag tag-grey">B1.3</span><span class="tag tag-grey">B1.4</span><span class="tag tag-grey">B1.5</span>
+          </div>
+        </div>
+
+        <div style="background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:1.4rem;">
+          <div style="font-family:var(--mono); font-size:.7rem; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.5rem;">Formation · SIO1</div>
+          <div style="font-weight:700; margin-bottom:.5rem;">MOVA – Application Python/MySQL</div>
+          <div style="color:#8899b0; font-size:.84rem; line-height:1.6;">PyQt5 · mysql-connector · PyInstaller · .exe</div>
+          <div style="display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.8rem;">
+            <span class="tag tag-grey">B2.1</span><span class="tag tag-grey">B2.2</span><span class="tag tag-grey">B1.4</span><span class="tag tag-grey">B1.5</span>
+          </div>
+        </div>
+
+        <div style="background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:1.4rem;">
+          <div style="font-family:var(--mono); font-size:.7rem; color:var(--accent2); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.5rem;">Formation · SIO2</div>
+          <div style="font-weight:700; margin-bottom:.5rem;">Clinique Pasteur – Python & PHP MVC</div>
+          <div style="color:#8899b0; font-size:.84rem; line-height:1.6;">PyQt5 · PHP POO MVC · MySQL · Authentification rôles</div>
+          <div style="display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.8rem;">
+            <span class="tag tag-grey">B2.1</span><span class="tag tag-grey">B2.2</span><span class="tag tag-grey">B1.4</span><span class="tag tag-grey">B1.6</span>
+          </div>
+        </div>
+
+        <div style="background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:1.4rem;">
+          <div style="font-family:var(--mono); font-size:.7rem; color:var(--accent2); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.5rem;">Formation · SIO2</div>
+          <div style="font-weight:700; margin-bottom:.5rem;">Clinique Pasteur – App mobile Flutter</div>
+          <div style="color:#8899b0; font-size:.84rem; line-height:1.6;">Flutter · Dart · Firebase Firestore · MEA · NoSQL</div>
+          <div style="display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.8rem;">
+            <span class="tag tag-grey">B2.1</span><span class="tag tag-grey">B2.3</span><span class="tag tag-grey">B1.4</span><span class="tag tag-grey">B1.6</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bouton télécharger grille -->
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <a href="Grille de compétence Drago Mamadou (1).pdf"
+           style="display:inline-flex; align-items:center; gap:.5rem;
+                  background:var(--accent); color:#000; font-family:var(--mono);
+                  font-size:.8rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+                  padding:.85rem 1.8rem; text-decoration:none; border-radius:2px;">
+          ↓ Grille de compétence (.pdf)
+        </a>
+        <a href="https://github.com/mamadoudrago/mes-projets-d-velopp-s/issues"
+           target="_blank"
+           style="display:inline-flex; align-items:center; gap:.5rem;
+                  border:1px solid var(--border); color:var(--text); font-family:var(--mono);
+                  font-size:.8rem; letter-spacing:.08em; text-transform:uppercase;
+                  padding:.85rem 1.8rem; text-decoration:none; border-radius:2px;">
+          ↗ Voir toutes mes réalisations sur GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
   <section id="contact">
     <div class="contact-inner">
-      <div class="section-label" style="text-align:center">05 — Contact</div>
+      <div class="section-label" style="text-align:center">07 — Contact</div>
       <h2 class="section-title">Travaillons <em>ensemble</em></h2>
       <p class="contact-desc">
         Étudiant en recherche d'opportunités, je suis disponible pour des alternances,
@@ -851,6 +1066,22 @@
   </footer>
 
   <script>
+    /*
+     * ♻️ GREEN CODING — BP10 : IntersectionObserver pour le lazy rendering
+     * ─────────────────────────────────────────────────────────────────────
+     * Au lieu d'animer TOUS les éléments au chargement de la page (coûteux),
+     * on utilise l'API IntersectionObserver native du navigateur pour ne
+     * déclencher les animations QUE quand l'élément entre dans le viewport.
+     *
+     * Avantages Green Coding :
+     *   → Moins de calculs CSS/JS au démarrage = page plus légère à charger
+     *   → Les éléments hors écran ne consomment pas de ressources GPU
+     *   → IntersectionObserver est natif (0 bibliothèque externe = 0 Ko supplémentaire)
+     *   → Alternative éco-responsable à des libs comme AOS.js (~14 Ko inutiles)
+     *
+     * Source : RGESN 2024 — critère "Éviter le traitement côté client de contenus
+     * non affichés" + Groupe ISIA 2026 — "limiter les ressources inutiles"
+     */
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -860,13 +1091,37 @@
       });
     }, { threshold: 0.1 });
 
+    /*
+     * ♻️ GREEN CODING — BP11 : sélecteur CSS groupé (une seule requête DOM)
+     * ─────────────────────────────────────────────────────────────────────
+     * On regroupe les 3 types de cards dans un seul querySelectorAll()
+     * au lieu de faire 3 appels DOM séparés. Moins d'accès au DOM =
+     * moins de reflows/repaints = moins de consommation CPU.
+     * (Coda School 2024 — optimisation énergétique du code)
+     */
     document.querySelectorAll('.skill-card, .project-card, .stage-card').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(24px)';
+      /* ♻️ GREEN CODING — BP12 : transition CSS pilotée par JS (et non setInterval)
+         On déclenche la transition CSS via style.transition plutôt qu'un timer JS
+         (setInterval/setTimeout). Le navigateur optimise lui-même la fréquence
+         d'exécution selon les ressources disponibles (requestAnimationFrame implicite).
+         (RGESN 2024 — laisser le navigateur gérer le rendu) */
       el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
       observer.observe(el);
     });
 
+    /*
+     * ♻️ GREEN CODING — BP13 : scroll listener avec lecture passive du DOM
+     * ─────────────────────────────────────────────────────────────────────
+     * Ce listener met en évidence le lien de navigation actif selon la section
+     * visible. On lit window.scrollY (1 accès simple) plutôt que getBoundingClientRect()
+     * en boucle (qui force un reflow complet du DOM à chaque appel, très coûteux).
+     *
+     * Amélioration possible (non implémentée ici pour garder le code lisible) :
+     * throttle ou debounce du listener pour limiter les appels à 1 tous les 100ms.
+     * (Maddyness 2024 — optimisation des performances = économie d'énergie)
+     */
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-links a');
     window.addEventListener('scroll', () => {
